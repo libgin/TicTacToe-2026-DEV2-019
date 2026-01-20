@@ -22,7 +22,7 @@ struct Position: Equatable, Hashable {
 }
 
 enum GameError: Error, Equatable {
-      case positionAlreadyPlayed
+    case positionAlreadyPlayed
 }
 
 enum GameStatus: Equatable {
@@ -47,23 +47,35 @@ struct Game: Equatable {
         
         if case let .inProgress(next) = status {
             moves[position] = next
-            if hasWinningRow(for: next) {
+            if hasWinningRow(for: next) || hasWinningColumn(for: next) {
                 status = .win(next)
             } else {
                 status = .inProgress(next: next.next)
             }
         }
-        
-        func hasWinningRow(for player: Player) -> Bool {
-            for row in 0..<size {
-                let isRowComplete = (0..<size).allSatisfy { column in
-                    moves[Position(row: row, column: column)] == player
-                }
-                if isRowComplete {
-                    return true
-                }
+    }
+    
+    private func hasWinningRow(for player: Player) -> Bool {
+        for row in 0..<size {
+            let isRowComplete = (0..<size).allSatisfy { column in
+                moves[Position(row: row, column: column)] == player
             }
-            return false
+            if isRowComplete {
+                return true
+            }
         }
+        return false
+    }
+    
+    private func hasWinningColumn(for player: Player) -> Bool {
+        for column in 0..<size {
+            let isColumnComplete = (0..<size).allSatisfy { row in
+                moves[Position(row: row, column: column)] == player
+            }
+            if isColumnComplete {
+                return true
+            }
+        }
+        return false
     }
 }

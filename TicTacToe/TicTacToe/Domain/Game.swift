@@ -54,13 +54,11 @@ struct Game: Equatable {
             }
         }
     }
-    
+
+    // Helpers to build winning lines and reuse a single completion check.
     private func hasWinningRow(for player: Player) -> Bool {
         for row in 0..<size {
-            let isRowComplete = (0..<size).allSatisfy { column in
-                moves[Position(row: row, column: column)] == player
-            }
-            if isRowComplete {
+            if isLineComplete(positions(inRow: row), for: player) {
                 return true
             }
         }
@@ -69,10 +67,7 @@ struct Game: Equatable {
     
     private func hasWinningColumn(for player: Player) -> Bool {
         for column in 0..<size {
-            let isColumnComplete = (0..<size).allSatisfy { row in
-                moves[Position(row: row, column: column)] == player
-            }
-            if isColumnComplete {
+            if isLineComplete(positions(inColumn: column), for: player) {
                 return true
             }
         }
@@ -80,15 +75,31 @@ struct Game: Equatable {
     }
     
     private func hasWinningDiagonal(for player: Player) -> Bool {
-        let primary = (0..<size).allSatisfy { index in
-            moves[Position(row: index, column: index)] == player
-        }
-        if primary {
-            return true
-        }
-        let secondary = (0..<size).allSatisfy { index in
-            moves[Position(row: index, column: size - 1 - index)] == player
-        }
-        return secondary
+        isLineComplete(positionsInPrimaryDiagonal(), for: player) || isLineComplete(positionsInSecondaryDiagonal(), for: player)
+    }
+    
+    // A line is complete when every position is claimed by the same player.
+    private func isLineComplete(_ positions: [Position], for player: Player) -> Bool {
+        positions.allSatisfy { moves[$0] == player }
+    }
+    
+    // Row positions: fixed row, varying columns.
+    private func positions(inRow row: Int) -> [Position] {
+        (0..<size).map { Position(row: row, column: $0) }
+    }
+    
+    // Column positions: fixed column, varying rows.
+    private func positions(inColumn column: Int) -> [Position] {
+        (0..<size).map { Position(row: $0, column: column) }
+    }
+    
+    // Primary diagonal: (0,0) -> (n-1,n-1).
+    private func positionsInPrimaryDiagonal() -> [Position] {
+        (0..<size).map { Position(row: $0, column: $0) }
+    }
+    
+    // Secondary diagonal: (0,n-1) -> (n-1,0).
+    private func positionsInSecondaryDiagonal() -> [Position] {
+        (0..<size).map { Position(row: $0, column: size - 1 - $0) }
     }
 }

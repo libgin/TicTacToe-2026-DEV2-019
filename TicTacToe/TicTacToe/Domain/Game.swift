@@ -28,6 +28,7 @@ enum GameError: Error, Equatable {
 enum GameStatus: Equatable {
     case inProgress(next: Player)
     case win(Player)
+    case draw
 }
 
 struct Game: Equatable {
@@ -49,6 +50,8 @@ struct Game: Equatable {
             moves[position] = next
             if hasWinningRow(for: next) || hasWinningColumn(for: next) || hasWinningDiagonal(for: next) {
                 status = .win(next)
+            } else if moves.count == size * size {
+                status = .draw
             } else {
                 status = .inProgress(next: next.next)
             }

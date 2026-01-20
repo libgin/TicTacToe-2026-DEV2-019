@@ -69,4 +69,20 @@ final class GameTests: XCTestCase {
         
         XCTAssertEqual(game.status, .win(.x))
     }
+    
+    func test_gameIsDrawWhenBoardIsFullWithoutWinner() throws {
+          var game = Game()
+
+          try game.play(at: Position(row: 0, column: 0)) // X
+          try game.play(at: Position(row: 0, column: 1)) // O
+          try game.play(at: Position(row: 0, column: 2)) // X
+          try game.play(at: Position(row: 1, column: 1)) // O
+          try game.play(at: Position(row: 1, column: 0)) // X
+          try game.play(at: Position(row: 1, column: 2)) // O
+          try game.play(at: Position(row: 2, column: 1)) // X
+          try game.play(at: Position(row: 2, column: 0)) // O
+          try game.play(at: Position(row: 2, column: 2)) // X
+
+          XCTAssertEqual(game.status, .draw)
+      }
 }

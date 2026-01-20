@@ -23,6 +23,7 @@ struct Position: Equatable, Hashable {
 
 enum GameError: Error, Equatable {
     case positionAlreadyPlayed
+    case gameOver
 }
 
 enum GameStatus: Equatable {
@@ -42,22 +43,24 @@ struct Game: Equatable {
     }
     
     mutating func play(at position: Position) throws {
+        guard case let .inProgress(next) = status else {
+            throw GameError.gameOver
+        }
+        
         if moves[position] != nil {
             throw GameError.positionAlreadyPlayed
         }
         
-        if case let .inProgress(next) = status {
-            moves[position] = next
-            if hasWinningRow(for: next) || hasWinningColumn(for: next) || hasWinningDiagonal(for: next) {
-                status = .win(next)
-            } else if moves.count == size * size {
-                status = .draw
-            } else {
-                status = .inProgress(next: next.next)
-            }
+        moves[position] = next
+        if hasWinningRow(for: next) || hasWinningColumn(for: next) || hasWinningDiagonal(for: next) {
+            status = .win(next)
+        } else if moves.count == size * size {
+            status = .draw
+        } else {
+            status = .inProgress(next: next.next)
         }
     }
-
+    
     // Helpers to build winning lines and reuse a single completion check.
     private func hasWinningRow(for player: Player) -> Bool {
         for row in 0..<size {

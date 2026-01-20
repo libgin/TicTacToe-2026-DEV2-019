@@ -27,11 +27,13 @@ enum GameError: Error, Equatable {
 
 enum GameStatus: Equatable {
     case inProgress(next: Player)
+    case win(Player)
 }
 
 struct Game: Equatable {
     private(set) var status: GameStatus
     private var moves: [Position: Player]
+    private let size = 3
     
     init() {
         status = .inProgress(next: .x)
@@ -45,7 +47,23 @@ struct Game: Equatable {
         
         if case let .inProgress(next) = status {
             moves[position] = next
-            status = .inProgress(next: next.next)
+            if hasWinningRow(for: next) {
+                status = .win(next)
+            } else {
+                status = .inProgress(next: next.next)
+            }
+        }
+        
+        func hasWinningRow(for player: Player) -> Bool {
+            for row in 0..<size {
+                let isRowComplete = (0..<size).allSatisfy { column in
+                    moves[Position(row: row, column: column)] == player
+                }
+                if isRowComplete {
+                    return true
+                }
+            }
+            return false
         }
     }
 }

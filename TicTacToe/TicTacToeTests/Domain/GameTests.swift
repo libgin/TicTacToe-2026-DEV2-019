@@ -47,14 +47,26 @@ final class GameTests: XCTestCase {
     }
     
     func test_playerWinsWithThreeInRowVertical() throws {
-          var game = Game()
-
-          try game.play(at: Position(row: 0, column: 0)) // X
-          try game.play(at: Position(row: 0, column: 1)) // O
-          try game.play(at: Position(row: 1, column: 0)) // X
-          try game.play(at: Position(row: 0, column: 2)) // O
-          try game.play(at: Position(row: 2, column: 0)) // X wins
-
-          XCTAssertEqual(game.status, .win(.x))
-      }
+        var game = Game()
+        
+        try game.play(at: Position(row: 0, column: 0)) // X
+        try game.play(at: Position(row: 0, column: 1)) // O
+        try game.play(at: Position(row: 1, column: 0)) // X
+        try game.play(at: Position(row: 0, column: 2)) // O
+        try game.play(at: Position(row: 2, column: 0)) // X wins
+        
+        XCTAssertEqual(game.status, .win(.x))
+    }
+    
+    func test_playerWinsWithThreeInRowDiagonal() throws {
+        var game = Game()
+        
+        try game.play(at: Position(row: 0, column: 0)) // X
+        try game.play(at: Position(row: 0, column: 1)) // O
+        try game.play(at: Position(row: 1, column: 1)) // X
+        try game.play(at: Position(row: 0, column: 2)) // O
+        try game.play(at: Position(row: 2, column: 2)) // X wins
+        
+        XCTAssertEqual(game.status, .win(.x))
+    }
 }

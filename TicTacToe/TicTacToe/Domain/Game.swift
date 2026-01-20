@@ -9,6 +9,16 @@ import Foundation
 
 enum Player: Equatable {
     case x
+    case o
+    
+    var next: Player {
+        self == .x ? .o : .x
+    }
+}
+
+struct Position: Equatable {
+    let row: Int
+    let column: Int
 }
 
 enum GameStatus: Equatable {
@@ -16,9 +26,16 @@ enum GameStatus: Equatable {
 }
 
 struct Game: Equatable {
-    let status: GameStatus
+    private(set) var status: GameStatus
     
     init() {
         status = .inProgress(next: .x)
+    }
+    
+    mutating func play(at position: Position) throws {
+        _ = position
+        if case let .inProgress(next) = status {
+            status = .inProgress(next: next.next)
+        }
     }
 }

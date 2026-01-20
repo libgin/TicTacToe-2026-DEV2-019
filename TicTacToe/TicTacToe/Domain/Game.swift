@@ -16,9 +16,13 @@ enum Player: Equatable {
     }
 }
 
-struct Position: Equatable {
+struct Position: Equatable, Hashable {
     let row: Int
     let column: Int
+}
+
+enum GameError: Error, Equatable {
+      case positionAlreadyPlayed
 }
 
 enum GameStatus: Equatable {
@@ -27,14 +31,20 @@ enum GameStatus: Equatable {
 
 struct Game: Equatable {
     private(set) var status: GameStatus
+    private var moves: [Position: Player]
     
     init() {
         status = .inProgress(next: .x)
+        moves = [:]
     }
     
     mutating func play(at position: Position) throws {
-        _ = position
+        if moves[position] != nil {
+            throw GameError.positionAlreadyPlayed
+        }
+        
         if case let .inProgress(next) = status {
+            moves[position] = next
             status = .inProgress(next: next.next)
         }
     }

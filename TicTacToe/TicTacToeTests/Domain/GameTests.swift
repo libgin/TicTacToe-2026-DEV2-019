@@ -14,23 +14,23 @@ final class GameTests: XCTestCase {
         let game = Game()
         XCTAssertEqual(game.status, .inProgress(next: .x))
     }
-}
-
-func test_playersAlternateTurns() throws {
     
-    var game = Game()
+    func test_playersAlternateTurns() throws {
+        
+        var game = Game()
+        
+        try game.play(at: Position(row: 0, column: 0))
+        XCTAssertEqual(game.status, .inProgress(next: .o))
+        
+        try game.play(at: Position(row: 1, column: 0))
+        XCTAssertEqual(game.status, .inProgress(next: .x))
+    }
     
-    try game.play(at: Position(row: 0, column: 0))
-    XCTAssertEqual(game.status, .inProgress(next: .o))
-    
-    try game.play(at: Position(row: 1, column: 0))
-    XCTAssertEqual(game.status, .inProgress(next: .x))
-}
-
-func test_cannotPlayOnOccupiedPosition() throws {
-    
-    var game = Game()
-    
-    try game.play(at: Position(row: 0, column: 0))
-    XCTAssertThrowsError(try game.play(at: Position(row: 0, column: 0)))
+    func test_cannotPlayOnOccupiedPosition() throws {
+        
+        var game = Game()
+        
+        try game.play(at: Position(row: 0, column: 0))
+        XCTAssertThrowsError(try game.play(at: Position(row: 0, column: 0)))
+    }
 }

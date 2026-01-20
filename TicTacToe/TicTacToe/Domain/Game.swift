@@ -47,7 +47,7 @@ struct Game: Equatable {
         
         if case let .inProgress(next) = status {
             moves[position] = next
-            if hasWinningRow(for: next) || hasWinningColumn(for: next) {
+            if hasWinningRow(for: next) || hasWinningColumn(for: next) || hasWinningDiagonal(for: next) {
                 status = .win(next)
             } else {
                 status = .inProgress(next: next.next)
@@ -77,5 +77,18 @@ struct Game: Equatable {
             }
         }
         return false
+    }
+    
+    private func hasWinningDiagonal(for player: Player) -> Bool {
+        let primary = (0..<size).allSatisfy { index in
+            moves[Position(row: index, column: index)] == player
+        }
+        if primary {
+            return true
+        }
+        let secondary = (0..<size).allSatisfy { index in
+            moves[Position(row: index, column: size - 1 - index)] == player
+        }
+        return secondary
     }
 }

@@ -26,3 +26,11 @@ func test_playersAlternateTurns() throws {
     try game.play(at: Position(row: 1, column: 0))
     XCTAssertEqual(game.status, .inProgress(next: .x))
 }
+
+func test_cannotPlayOnOccupiedPosition() throws {
+    
+    var game = Game()
+    
+    try game.play(at: Position(row: 0, column: 0))
+    XCTAssertThrowsError(try game.play(at: Position(row: 0, column: 0)))
+}

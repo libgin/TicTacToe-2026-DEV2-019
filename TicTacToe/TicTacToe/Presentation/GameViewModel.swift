@@ -39,4 +39,11 @@ final class GameViewModel: ObservableObject {
         case .o: return "O"
         }
     }
+    
+    func play(row: Int, column: Int) throws {
+        try session.play(at: Position(row: row, column: column))
+        let state = session.state()
+        cells = state.cells
+        statusText = GameViewModel.statusText(from: state.status)
+    }
 }

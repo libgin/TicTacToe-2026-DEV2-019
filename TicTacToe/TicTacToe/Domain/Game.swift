@@ -34,12 +34,12 @@ enum GameStatus: Equatable {
 
 struct Game: Equatable {
     private(set) var status: GameStatus
-    private var moves: [Position: Player]
-    private let size = 3
+    private var board: Board
+    private var size: Int { board.size }
     
     init() {
         status = .inProgress(next: .x)
-        moves = [:]
+        board = Board(size: 3)
     }
     
     mutating func play(at position: Position) throws {
@@ -47,14 +47,11 @@ struct Game: Equatable {
             throw GameError.gameOver
         }
         
-        if moves[position] != nil {
-            throw GameError.positionAlreadyPlayed
-        }
+        try board.place(next, at: position)
         
-        moves[position] = next
         if hasWinningRow(for: next) || hasWinningColumn(for: next) || hasWinningDiagonal(for: next) {
             status = .win(next)
-        } else if moves.count == size * size {
+        } else if board.isFull {
             status = .draw
         } else {
             status = .inProgress(next: next.next)
@@ -86,7 +83,7 @@ struct Game: Equatable {
     
     // A line is complete when every position is claimed by the same player.
     private func isLineComplete(_ positions: [Position], for player: Player) -> Bool {
-        positions.allSatisfy { moves[$0] == player }
+        positions.allSatisfy { board.player(at: $0) == player }
     }
     
     // Row positions: fixed row, varying columns.

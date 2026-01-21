@@ -26,4 +26,14 @@ final class GameViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.cells[0][0], .x)
         XCTAssertEqual(viewModel.statusText, "Next: O")
     }
+    
+    func test_resetClearsBoardAndResetsStatus() throws {
+        let viewModel = GameViewModel()
+        
+        try viewModel.play(row: 0, column: 0)
+        viewModel.reset()
+        
+        XCTAssertTrue(viewModel.cells.flatMap { $0 }.allSatisfy { $0 == nil })
+        XCTAssertEqual(viewModel.statusText, "Next: X")
+    }
 }

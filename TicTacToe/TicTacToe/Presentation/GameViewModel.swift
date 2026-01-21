@@ -46,4 +46,11 @@ final class GameViewModel: ObservableObject {
         cells = state.cells
         statusText = GameViewModel.statusText(from: state.status)
     }
+    
+    func reset() {
+        session.reset()
+        let state = session.state()
+        cells = state.cells
+        statusText = GameViewModel.statusText(from: state.status)
+    }
 }

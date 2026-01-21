@@ -19,4 +19,13 @@ final class GameSessionTests: XCTestCase {
         XCTAssertTrue(state.cells.allSatisfy { $0.count == 3 })
         XCTAssertTrue(state.cells.flatMap { $0 }.allSatisfy { $0 == nil })
     }
+    
+    func test_playMoveUpdatesState() throws {
+        let session = GameSession()
+        try session.play(at: Position(row: 0, column: 0))
+        let state = session.state()
+        
+        XCTAssertEqual(state.status, .inProgress(next: .o))
+        XCTAssertEqual(state.cells[0][0], .x)
+    }
 }

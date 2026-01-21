@@ -23,4 +23,8 @@ final class GameSession {
     func play(at position: Position) throws {
         try game.play(at: position)
     }
+    
+    func reset() {
+        game = Game()
+    }
 }

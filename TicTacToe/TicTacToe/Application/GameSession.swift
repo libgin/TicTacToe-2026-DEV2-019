@@ -19,4 +19,8 @@ final class GameSession {
         }
         return GameState(status: game.status, size: size, cells: cells)
     }
+    
+    func play(at position: Position) throws {
+        try game.play(at: position)
+    }
 }

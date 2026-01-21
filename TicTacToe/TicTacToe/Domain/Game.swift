@@ -35,7 +35,7 @@ enum GameStatus: Equatable {
 struct Game: Equatable {
     private(set) var status: GameStatus
     private var board: Board
-    private var size: Int { board.size }
+    var size: Int { board.size }
     
     init() {
         status = .inProgress(next: .x)
@@ -56,6 +56,10 @@ struct Game: Equatable {
         } else {
             status = .inProgress(next: next.next)
         }
+    }
+    
+    func player(at position: Position) -> Player? {
+        board.player(at: position)
     }
     
     // Helpers to build winning lines and reuse a single completion check.

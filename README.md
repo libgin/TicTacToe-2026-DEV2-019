@@ -26,6 +26,13 @@ The focus is on clean design, explicit rules, and showing the development proces
 ## Tests
 - Run all tests with `Cmd+U` in Xcode.
 
+## CI
+- GitHub Actions runs `xcodebuild test` on every push to `main`.
+- The workflow creates a simulator on the runner and runs tests serially for stability.
+
+## Coverage
+Enable **Gather coverage data** in the Test scheme, run `Cmd+U`, then check **Coverage** in the Report navigator (`Cmd+9`).
+
 ## Architecture (high level)
 - Domain: rules and entities (`Game`, `Board`, `Player`, `Position`, `GameStatus`).
 - Application: orchestration (`GameSession`, `GameState`).

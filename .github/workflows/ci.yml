@@ -29,4 +29,6 @@ jobs:
             -project TicTacToe/TicTacToe.xcodeproj \
             -scheme TicTacToe \
             -destination "id=${{ steps.sim.outputs.device }}" \
+            -parallel-testing-enabled NO \
+            -maximum-concurrent-test-simulator-destinations 1 \
             test

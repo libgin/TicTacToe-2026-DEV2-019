@@ -7,22 +7,25 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct ContentView: View {
     @StateObject private var viewModel = GameViewModel()
     
     var body: some View {
-        VStack(spacing: 16) {
-            Text(viewModel.statusText)
-                .font(.headline)
-            
-            board
-            
-            Button("Reset") {
-                viewModel.reset()
+        ScrollView {
+            VStack(spacing: 16) {
+                Text(viewModel.statusText)
+                    .font(.headline)
+                    .accessibilityIdentifier("statusLabel")
+                
+                board
+                
+                Button("Reset") {
+                    viewModel.reset()
+                }
+                .buttonStyle(.borderedProminent)
+                .accessibilityIdentifier("resetButton")
             }
-            .buttonStyle(.borderedProminent)
+            .frame(maxWidth: .infinity)
         }
         .padding()
     }
@@ -46,7 +49,26 @@ struct ContentView: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(value != nil)
+                .accessibilityIdentifier("cell_\(position.row)_\(position.column)")
+                .accessibilityLabel(cellLabelText(for: value))
+                .accessibilityValue(cellValueText(for: value))
             }
+        }
+    }
+
+    private func cellLabelText(for value: Player?) -> String {
+        let symbol = cellValueText(for: value)
+        return symbol.isEmpty ? "Empty" : symbol
+    }
+
+    private func cellValueText(for value: Player?) -> String {
+        switch value {
+        case .x:
+            return "X"
+        case .o:
+            return "O"
+        case .none:
+            return ""
         }
     }
 }

@@ -22,6 +22,7 @@ final class GameViewModel: ObservableObject {
         self.statusText = GameViewModel.statusText(from: state.status)
     }
     
+    // Converts domain status into UI text.
     private static func statusText(from status: GameStatus) -> String {
         switch status {
         case .inProgress(let next):
@@ -33,6 +34,7 @@ final class GameViewModel: ObservableObject {
         }
     }
     
+    // Single place to map domain players to UI symbols.
     private static func playerSymbol(_ player: Player) -> String {
         switch player {
         case .x: return "X"
@@ -42,6 +44,7 @@ final class GameViewModel: ObservableObject {
     
     func play(row: Int, column: Int) throws {
         try session.play(at: Position(row: row, column: column))
+        // Refresh UI from the latest session snapshot.
         let state = session.state()
         cells = state.cells
         statusText = GameViewModel.statusText(from: state.status)
@@ -49,6 +52,7 @@ final class GameViewModel: ObservableObject {
     
     func reset() {
         session.reset()
+        // Refresh UI from a new game.
         let state = session.state()
         cells = state.cells
         statusText = GameViewModel.statusText(from: state.status)

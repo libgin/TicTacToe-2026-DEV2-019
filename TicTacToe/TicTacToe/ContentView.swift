@@ -13,6 +13,7 @@ struct ContentView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
+                // Accessibility identifiers below are used by UI tests.
                 Text(viewModel.statusText)
                     .font(.headline)
                     .accessibilityIdentifier("statusLabel")
@@ -33,6 +34,7 @@ struct ContentView: View {
     private var board: some View {
         let size = viewModel.cells.count
         let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: size)
+        // Flatten positions to keep a stable id per cell.
         let positions = (0..<size).flatMap { row in
             (0..<size).map { column in
                 Position(row: row, column: column)

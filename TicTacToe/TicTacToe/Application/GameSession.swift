@@ -11,6 +11,7 @@ final class GameSession {
     private var game = Game()
     
     func state() -> GameState {
+        // Map the domain board to a UI snapshot.
         let size = game.size
         let cells = (0..<size).map { row in
             (0..<size).map { column in

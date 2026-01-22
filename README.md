@@ -55,10 +55,10 @@ This keeps the rules independent from the UI and makes the core logic easy to te
 ## TDD and Git History
 I used a strict red/green/refactor flow while implementing the rules.
 The commit history is intentionally granular so you can follow the reasoning step by step:
-- `T` adds a failing test for a rule or scenario.
-- `F` adds the smallest change to make the test pass.
-- `R` cleans up the design without changing behavior.
-- `D` adds/cleans up the Doc README.
+- `T` test - adds a failing test for a rule or scenario.
+- `F` feature - adds the smallest change to make the test pass.
+- `R` refactor -  cleans up the design without changing behavior.
+- `D` documents - adds/cleans up the Docs README.
 
 This makes the evolution of the solution explicit rather than just showing a final result.
 

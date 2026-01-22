@@ -8,34 +8,48 @@
 import XCTest
 
 final class TicTacToeUITests: XCTestCase {
+    private var app: XCUIApplication!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
+        app = XCUIApplication()
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 
-    @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
+    func test_playingUpdatesCellAndStatus() {
+        let status = app.staticTexts["statusLabel"]
+        XCTAssertTrue(status.waitForExistence(timeout: 5))
+        XCTAssertEqual(status.label, "Next: X")
+
+        let cell = app.buttons["cell_0_0"]
+        XCTAssertTrue(cell.waitForExistence(timeout: 5))
+        cell.tap()
+
+        XCTAssertTrue(waitFor(label: "X", element: cell))
+        XCTAssertTrue(waitFor(label: "Next: O", element: status))
+        XCTAssertFalse(cell.isEnabled)
+    }
+
+    func test_resetClearsBoard() {
+        let cell = app.buttons["cell_0_0"]
+        XCTAssertTrue(cell.waitForExistence(timeout: 5))
+        cell.tap()
+
+        let reset = app.buttons["resetButton"]
+        XCTAssertTrue(reset.waitForExistence(timeout: 5))
+        if !reset.isHittable {
+            app.swipeUp()
         }
+        reset.tap()
+
+        XCTAssertTrue(waitFor(label: "Empty", element: cell))
+        XCTAssertTrue(waitFor(label: "Next: X", element: app.staticTexts["statusLabel"]))
+        XCTAssertTrue(cell.isEnabled)
+    }
+
+    private func waitFor(label: String, element: XCUIElement) -> Bool {
+        let predicate = NSPredicate(format: "label == %@", label)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: 5) == .completed
     }
 }

@@ -42,8 +42,11 @@ Run `Cmd+U`, then check **Coverage** in the Report navigator (`Cmd+9`).
 This keeps the rules independent from the UI and makes the core logic easy to test.
 
 ## Decisions
-- Board as a separate entity: it keeps the game rules focused on state transitions, while the board is responsible for storage and placement rules.
-- UI tests in a separate workflow: UI tests are useful but can be flaky on shared runners, so I keep them out of the main CI signal and run them manually or nightly.
+- Board as a separate entity. It keeps game rules focused, while the board stores moves and enforces placement rules.
+- UI tests in a separate workflow: they are useful but can be flaky on shared runners, so they do not block main CI.
+- MVVM with SwiftUI. Views stay simple and the logic is easy to test.
+- GameSession as an application layer the UI talks to one place and the domain stays clean.
+- GameState as a DTO. It gives the UI a simple snapshot without exposing domain internals.
 
 ## Notes
 - I kept the UI intentionally simple to stay focused on the rules and test coverage.

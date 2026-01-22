@@ -16,17 +16,7 @@ jobs:
       - name: Create simulator
         id: sim
         run: |
-          RUNTIME=$(xcrun simctl list runtimes -j | python3 - <<'PY'
-import json, sys
-data = json.load(sys.stdin)
-runtimes = [
-    r for r in data.get("runtimes", [])
-    if r.get("isAvailable") and r.get("identifier", "").startswith("com.apple.CoreSimulator.SimRuntime.iOS")
-]
-runtimes.sort(key=lambda r: r.get("version", ""))
-print(runtimes[-1]["identifier"] if runtimes else "")
-PY
-)
+          RUNTIME=$(xcrun simctl list runtimes -j | python3 -c 'import json,sys; data=json.load(sys.stdin); runtimes=[r for r in data.get("runtimes",[]) if r.get("isAvailable") and r.get("identifier","").startswith("com.apple.CoreSimulator.SimRuntime.iOS")]; runtimes.sort(key=lambda r: r.get("version","")); print(runtimes[-1]["identifier"] if runtimes else "")')
           if [ -z "$RUNTIME" ]; then
             echo "No iOS runtime found" >&2
             exit 1

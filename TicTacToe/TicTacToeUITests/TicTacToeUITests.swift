@@ -25,9 +25,8 @@ final class TicTacToeUITests: XCTestCase {
         XCTAssertTrue(cell.waitForExistence(timeout: 5))
         cell.tap()
 
-        XCTAssertTrue(waitFor(label: "X", element: cell))
         XCTAssertTrue(waitFor(label: "Next: O", element: status))
-        XCTAssertFalse(cell.isEnabled)
+        XCTAssertTrue(waitFor(enabled: false, element: cell))
     }
 
     func test_resetClearsBoard() {
@@ -42,13 +41,18 @@ final class TicTacToeUITests: XCTestCase {
         }
         reset.tap()
 
-        XCTAssertTrue(waitFor(label: "Empty", element: cell))
         XCTAssertTrue(waitFor(label: "Next: X", element: app.staticTexts["statusLabel"]))
-        XCTAssertTrue(cell.isEnabled)
+        XCTAssertTrue(waitFor(enabled: true, element: cell))
     }
 
     private func waitFor(label: String, element: XCUIElement) -> Bool {
         let predicate = NSPredicate(format: "label == %@", label)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        return XCTWaiter().wait(for: [expectation], timeout: 5) == .completed
+    }
+
+    private func waitFor(enabled: Bool, element: XCUIElement) -> Bool {
+        let predicate = NSPredicate(format: "enabled == %@", NSNumber(value: enabled))
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
         return XCTWaiter().wait(for: [expectation], timeout: 5) == .completed
     }

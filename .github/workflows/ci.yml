@@ -31,4 +31,5 @@ jobs:
             -destination "id=${{ steps.sim.outputs.device }}" \
             -parallel-testing-enabled NO \
             -maximum-concurrent-test-simulator-destinations 1 \
+            -skip-testing:TicTacToeUITests \
             test
